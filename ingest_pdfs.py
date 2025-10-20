@@ -1,8 +1,12 @@
 #To run the environment, use source .venv/bin/activate
 
-#Load the pdf developer documentation
+#Input the path to the pdf's directory
 from pathlib import Path
-from langchain.document_loaders import PyPDFLoader
+#Import to load pdfs into documents
+from langchain_community.document_loaders import PyPDFLoader
+#Import to split text into chunks
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 
 
 #Load documents from data directory
@@ -18,7 +22,11 @@ def load_documents(pdf_dir: str):
         doc_loader = PyPDFLoader(str(pdf))
         #Append the loaded pages to all_docs
         all_docs.extend(doc_loader.load())
-        return all_docs
+    return all_docs
 
-documents = load_documents("data")
-        
+if __name__ == "__main__":
+    documents = load_documents("data")
+    #Quanity of documents loaded
+    print(f"Loaded {len(documents)} documents")
+    #Print the first document
+    print(documents[0])
