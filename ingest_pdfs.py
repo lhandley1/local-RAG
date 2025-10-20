@@ -5,7 +5,8 @@ from pathlib import Path
 #Import to load pdfs into documents
 from langchain_community.document_loaders import PyPDFLoader
 #Import to split text into chunks
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 
 
@@ -24,9 +25,26 @@ def load_documents(pdf_dir: str):
         all_docs.extend(doc_loader.load())
     return all_docs
 
+def split_documents(documents: list[Document]):
+    """Splits documents into chunks of text."""
+    #Implementation of the text splitter
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=800,
+        chunk_overlap=150,
+        length_function=len,
+        separators=["\n\n", "\n", " ", ""], 
+    )
+    return text_splitter.split_documents(documents)
+
 if __name__ == "__main__":
     documents = load_documents("data")
-    #Quanity of documents loaded
+    #Quantity of documents loaded
     print(f"Loaded {len(documents)} documents")
     #Print the first document
     print(documents[0])
+    #Split the documents into chunks
+    chunks = split_documents(documents)
+    #Print the first chunked document
+    print(chunks[0])
+    #Quantity of documents after splitting
+    print(f"Split into {len(chunks)} chunks")
